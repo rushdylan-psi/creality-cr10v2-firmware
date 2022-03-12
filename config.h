@@ -1,0 +1,707 @@
+/**
+ * Marlin 3D Printer Firmware
+ * For use with creality cr10S v2 only!
+ * this firmware will initiate the thermal runaway protection which shipped from creality TURNED OFF (NOT SAFE!)
+ */
+#pragma once
+#define CONFIGURATION_H_VERSION 02000903
+#define STRING_CONFIG_H_AUTHOR "(none, default config)" 
+#define SHOW_BOOTSCREEN
+#ifndef MOTHERBOARD
+#define MOTHERBOARD BOARD_RAMPS_14_EFB
+#endif
+
+
+#define SERIAL_PORT 0
+#define BAUDRATE 250000
+#if LINEAR_AXES >= 4
+  #define AXIS4_NAME 'A' // :['A', 'B', 'C', 'U', 'V', 'W']
+#endif
+
+
+#if LINEAR_AXES >= 5
+  #define AXIS5_NAME 'B' // :['A', 'B', 'C', 'U', 'V', 'W']
+#endif
+
+
+#if LINEAR_AXES >= 6
+  #define AXIS6_NAME 'C' 
+#endif
+
+#define EXTRUDERS 1
+
+
+#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
+
+
+#if ENABLED(SINGLENOZZLE)
+#endif
+
+
+#if ENABLED(SWITCHING_EXTRUDER)
+  #define SWITCHING_EXTRUDER_SERVO_NR 0
+  #define SWITCHING_EXTRUDER_SERVO_ANGLES { 0, 90 } 
+  #if EXTRUDERS > 3
+    #define SWITCHING_EXTRUDER_E23_SERVO_NR 1
+  #endif
+#endif
+
+
+#if ENABLED(SWITCHING_NOZZLE)
+  #define SWITCHING_NOZZLE_SERVO_NR 0
+  #define SWITCHING_NOZZLE_SERVO_ANGLES { 0, 90 }   
+#endif
+
+
+
+#if EITHER(PARKING_EXTRUDER, MAGNETIC_PARKING_EXTRUDER)
+
+  #define PARKING_EXTRUDER_PARKING_X { -78, 184 }     
+  #define PARKING_EXTRUDER_GRAB_DISTANCE 1            
+
+  #if ENABLED(PARKING_EXTRUDER)
+
+    #define PARKING_EXTRUDER_SOLENOIDS_INVERT           
+    #define PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE LOW  
+    #define PARKING_EXTRUDER_SOLENOIDS_DELAY 250        
+
+  #elif ENABLED(MAGNETIC_PARKING_EXTRUDER)
+
+    #define MPE_FAST_SPEED      9000      
+    #define MPE_SLOW_SPEED      4500      
+    #define MPE_TRAVEL_DISTANCE   10      
+    #define MPE_COMPENSATION       0      
+
+  #endif
+
+#endif
+
+
+
+#if ANY(SWITCHING_TOOLHEAD, MAGNETIC_SWITCHING_TOOLHEAD, ELECTROMAGNETIC_SWITCHING_TOOLHEAD)
+  #define SWITCHING_TOOLHEAD_Y_POS          235        
+  #define SWITCHING_TOOLHEAD_Y_SECURITY      10        
+  #define SWITCHING_TOOLHEAD_Y_CLEAR         60        
+  #define SWITCHING_TOOLHEAD_X_POS          { 215, 0 }  
+  #if ENABLED(SWITCHING_TOOLHEAD)
+    #define SWITCHING_TOOLHEAD_SERVO_NR       2        
+    #define SWITCHING_TOOLHEAD_SERVO_ANGLES { 0, 180 } 
+  #elif ENABLED(MAGNETIC_SWITCHING_TOOLHEAD)
+    #define SWITCHING_TOOLHEAD_Y_RELEASE      5         
+    #define SWITCHING_TOOLHEAD_X_SECURITY   { 90, 150 }                   
+      #define SWITCHING_TOOLHEAD_PRIME_MM           20 
+      #define SWITCHING_TOOLHEAD_RETRACT_MM         10  
+      #define SWITCHING_TOOLHEAD_PRIME_FEEDRATE    300  
+      #define SWITCHING_TOOLHEAD_RETRACT_FEEDRATE 2400  
+    #endif
+  #elif ENABLED(ELECTROMAGNETIC_SWITCHING_TOOLHEAD)
+    #define SWITCHING_TOOLHEAD_Z_HOP          2       
+  #endif
+#endif
+
+
+#if ENABLED(MIXING_EXTRUDER)
+  #define MIXING_STEPPERS 2        
+  #define MIXING_VIRTUAL_TOOLS 16          
+  #if ENABLED(GRADIENT_MIX)      
+  #endif
+#endif
+
+
+
+#if ENABLED(PSU_CONTROL)
+  #define PSU_ACTIVE_STATE LOW      
+
+  #if ENABLED(AUTO_POWER_CONTROL)
+    #define AUTO_POWER_FANS         
+    #define AUTO_POWER_E_FANS
+    #define AUTO_POWER_CONTROLLERFAN
+    #define AUTO_POWER_CHAMBER_FAN
+    #define AUTO_POWER_COOLER_FAN
+    #define POWER_TIMEOUT              30
+  #endif
+  #if EITHER(AUTO_POWER_CONTROL, POWER_OFF_WAIT_FOR_COOLDOWN)
+  #endif
+#endif
+
+/** Thermal settings */
+
+#define TEMP_SENSOR_0 1
+#define TEMP_SENSOR_1 0
+#define TEMP_SENSOR_2 0
+#define TEMP_SENSOR_3 0
+#define TEMP_SENSOR_4 0
+#define TEMP_SENSOR_5 0
+#define TEMP_SENSOR_6 0
+#define TEMP_SENSOR_7 0
+#define TEMP_SENSOR_BED 0
+#define TEMP_SENSOR_PROBE 0
+#define TEMP_SENSOR_CHAMBER 0
+#define TEMP_SENSOR_COOLER 0
+#define TEMP_SENSOR_BOARD 0
+#define TEMP_SENSOR_REDUNDANT 0
+
+
+#define DUMMY_THERMISTOR_998_VALUE  25
+#define DUMMY_THERMISTOR_999_VALUE 100
+#define TEMP_RESIDENCY_TIME         10  
+#define TEMP_WINDOW                  1  
+#define TEMP_HYSTERESIS              3  
+#define TEMP_BED_RESIDENCY_TIME     10  
+#define TEMP_BED_WINDOW              1  
+#define TEMP_BED_HYSTERESIS          3  
+
+#define TEMP_CHAMBER_RESIDENCY_TIME 10  
+#define TEMP_CHAMBER_WINDOW          1 
+#define TEMP_CHAMBER_HYSTERESIS      3  
+
+
+#if TEMP_SENSOR_REDUNDANT
+  #define TEMP_SENSOR_REDUNDANT_SOURCE    E1  
+  #define TEMP_SENSOR_REDUNDANT_TARGET    E0  
+  #define TEMP_SENSOR_REDUNDANT_MAX_DIFF  10  
+#endif
+
+
+#define HEATER_0_MINTEMP   5
+#define HEATER_1_MINTEMP   5
+#define HEATER_2_MINTEMP   5
+#define HEATER_3_MINTEMP   5
+#define HEATER_4_MINTEMP   5
+#define HEATER_5_MINTEMP   5
+#define HEATER_6_MINTEMP   5
+#define HEATER_7_MINTEMP   5
+#define BED_MINTEMP        5
+#define CHAMBER_MINTEMP    5
+#define HEATER_0_MAXTEMP 275
+#define HEATER_1_MAXTEMP 275
+#define HEATER_2_MAXTEMP 275
+#define HEATER_3_MAXTEMP 275
+#define HEATER_4_MAXTEMP 275
+#define HEATER_5_MAXTEMP 275
+#define HEATER_6_MAXTEMP 275
+#define HEATER_7_MAXTEMP 275
+#define BED_MAXTEMP      150
+#define CHAMBER_MAXTEMP  60
+#define HOTEND_OVERSHOOT 15   
+#define BED_OVERSHOOT    10   
+#define COOLER_OVERSHOOT  2   
+#define PIDTEMP
+#define BANG_MAX 255     
+#define PID_MAX BANG_MAX 
+#define PID_K1 0.95      
+
+#if ENABLED(PIDTEMP)
+
+  #if ENABLED(PID_PARAMS_PER_HOTEND)
+    #define DEFAULT_Kp_LIST {  22.20,  22.20 }
+    #define DEFAULT_Ki_LIST {   1.08,   1.08 }
+    #define DEFAULT_Kd_LIST { 114.00, 114.00 }
+  #else
+    #define DEFAULT_Kp  22.20
+    #define DEFAULT_Ki   1.08
+    #define DEFAULT_Kd 114.00
+  #endif
+#endif 
+
+
+#define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
+
+#if ENABLED(PIDTEMPBED)
+  #define DEFAULT_bedKp 10.00
+  #define DEFAULT_bedKi .023
+  #define DEFAULT_bedKd 305.4
+
+
+#endif
+#define MAX_CHAMBER_POWER 255 
+
+#if ENABLED(PIDTEMPCHAMBER)
+  #define MIN_CHAMBER_POWER 0
+  #define DEFAULT_chamberKp 37.04
+  #define DEFAULT_chamberKi 1.40
+  #define DEFAULT_chamberKd 655.17
+#endif
+
+#if ANY(PIDTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
+  #define PID_FUNCTIONAL_RANGE 10 
+#define PREVENT_COLD_EXTRUSION
+#define EXTRUDE_MINTEMP 170
+#define PREVENT_LENGTHY_EXTRUDE
+#define EXTRUDE_MAXLENGTH 200
+#define THERMAL_PROTECTION_HOTENDS 
+#define THERMAL_PROTECTION_BED     
+#define THERMAL_PROTECTION_CHAMBER 
+#define THERMAL_PROTECTION_COOLER  
+
+
+#if ENABLED(POLARGRAPH)
+  #define POLARGRAPH_MAX_BELT_LEN 1035.0
+  #define POLAR_SEGMENTS_PER_SECOND 5
+#endif
+
+#define USE_XMIN_PLUG
+#define USE_YMIN_PLUG
+#define USE_ZMIN_PLUG
+#define ENDSTOPPULLUPS
+#if DISABLED(ENDSTOPPULLUPS)
+#endif
+
+#if DISABLED(ENDSTOPPULLDOWNS)
+#endif
+
+
+#define X_MIN_ENDSTOP_INVERTING false 
+#define Y_MIN_ENDSTOP_INVERTING false 
+#define Z_MIN_ENDSTOP_INVERTING false 
+#define I_MIN_ENDSTOP_INVERTING false 
+#define J_MIN_ENDSTOP_INVERTING false 
+#define K_MIN_ENDSTOP_INVERTING false 
+#define X_MAX_ENDSTOP_INVERTING false 
+#define Y_MAX_ENDSTOP_INVERTING false 
+#define Z_MAX_ENDSTOP_INVERTING false 
+#define I_MAX_ENDSTOP_INVERTING false 
+#define J_MAX_ENDSTOP_INVERTING false 
+#define K_MAX_ENDSTOP_INVERTING false 
+#define Z_MIN_PROBE_ENDSTOP_INVERTING false 
+
+/**
+   Stepper Drivers
+  A4988 is assumed for unspecified drivers.
+  Use TMC2208/TMC2208_STANDALONE for TMC2225 drivers and TMC2209/TMC2209_STANDALONE for TMC2226 drivers.
+ */
+
+#define X_DRIVER_TYPE  A4988
+#define Y_DRIVER_TYPE  A4988
+#define Z_DRIVER_TYPE  A4988
+//#define X2_DRIVER_TYPE A4988
+//#define Y2_DRIVER_TYPE A4988
+//#define Z2_DRIVER_TYPE A4988
+//#define Z3_DRIVER_TYPE A4988
+//#define Z4_DRIVER_TYPE A4988
+//#define I_DRIVER_TYPE  A4988
+//#define J_DRIVER_TYPE  A4988
+//#define K_DRIVER_TYPE  A4988
+#define E0_DRIVER_TYPE A4988
+//#define E1_DRIVER_TYPE A4988
+//#define E2_DRIVER_TYPE A4988
+//#define E3_DRIVER_TYPE A4988
+//#define E4_DRIVER_TYPE A4988
+//#define E5_DRIVER_TYPE A4988
+//#define E6_DRIVER_TYPE A4988
+//#define E7_DRIVER_TYPE A4988
+
+
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 500 }
+
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
+
+#if ENABLED(LIMITED_MAX_FR_EDITING)
+  #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 10, 50 } 
+#endif
+
+#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
+
+#if ENABLED(LIMITED_MAX_ACCEL_EDITING)
+  #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 } 
+#endif
+
+#define DEFAULT_ACCELERATION          3000    
+#define DEFAULT_RETRACT_ACCELERATION  3000   
+#define DEFAULT_TRAVEL_ACCELERATION   3000    
+
+
+#if ENABLED(CLASSIC_JERK)
+  #define DEFAULT_XJERK 10.0
+  #define DEFAULT_YJERK 10.0
+  #define DEFAULT_ZJERK  0.3
+
+  #if ENABLED(LIMITED_JERK_EDITING)
+    #define MAX_JERK_EDIT_VALUES { 20, 20, 0.6, 10 } 
+  #endif
+#endif
+
+#define DEFAULT_EJERK    5.0  
+
+#if DISABLED(CLASSIC_JERK)
+  #define JUNCTION_DEVIATION_MM 0.013 
+  #define JD_HANDLE_SMALL_SEGMENTS    
+#endif
+
+#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
+
+
+#if ENABLED(MAGLEV4)
+  #define MAGLEV_TRIGGER_DELAY 15     
+#endif
+
+#if ENABLED(TOUCH_MI_PROBE)
+  #define TOUCH_MI_RETRACT_Z 0.5                
+#endif
+
+
+
+#if ENABLED(RACK_AND_PINION_PROBE)
+  #define Z_PROBE_DEPLOY_X  X_MIN_POS
+  #define Z_PROBE_RETRACT_X X_MAX_POS
+#endif
+
+
+#if ENABLED(DUET_SMART_EFFECTOR)
+  #define SMART_EFFECTOR_MOD_PIN  -1  
+#endif
+
+#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
+#define PROBING_MARGIN 10
+#define XY_PROBE_FEEDRATE (133*60)
+#define Z_PROBE_FEEDRATE_FAST (4*60)
+#define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 2)
+#if ENABLED(PROBE_ACTIVATION_SWITCH)
+  #define PROBE_ACTIVATION_SWITCH_STATE LOW 
+#endif
+
+#if ENABLED(PROBE_TARE)
+  #define PROBE_TARE_TIME  200    
+  #define PROBE_TARE_DELAY 200    
+  #define PROBE_TARE_STATE HIGH   
+  #if ENABLED(PROBE_ACTIVATION_SWITCH)
+  #endif
+#endif
+
+#if ENABLED(PROBE_ENABLE_DISABLE)
+#endif
+
+#define Z_CLEARANCE_DEPLOY_PROBE   10 
+#define Z_CLEARANCE_BETWEEN_PROBES  5 
+#define Z_CLEARANCE_MULTI_PROBE     5 
+
+
+#define Z_PROBE_LOW_POINT          -2 
+#define Z_PROBE_OFFSET_RANGE_MIN -20
+#define Z_PROBE_OFFSET_RANGE_MAX 20
+
+#if ENABLED(PAUSE_BEFORE_DEPLOY_STOW)
+#endif
+
+#if ENABLED(PROBING_HEATERS_OFF)
+#endif
+
+#if ENABLED(PREHEAT_BEFORE_PROBING)
+  #define PROBING_NOZZLE_TEMP 120   
+  #define PROBING_BED_TEMP     50
+#endif
+
+
+#define X_ENABLE_ON 0
+#define Y_ENABLE_ON 0
+#define Z_ENABLE_ON 0
+#define E_ENABLE_ON 0 
+#define DISABLE_X false
+#define DISABLE_Y false
+#define DISABLE_Z false
+#define DISABLE_E false             
+#define DISABLE_INACTIVE_EXTRUDER   
+#define INVERT_Y_DIR true
+#define INVERT_Z_DIR false
+#define INVERT_E0_DIR false
+#define INVERT_E1_DIR false
+#define INVERT_E2_DIR false
+#define INVERT_E3_DIR false
+#define INVERT_E4_DIR false
+#define INVERT_E5_DIR false
+#define INVERT_E6_DIR false
+#define INVERT_E7_DIR false
+#define X_HOME_DIR -1
+#define Y_HOME_DIR -1
+#define Z_HOME_DIR -1
+#define X_BED_SIZE 200
+#define Y_BED_SIZE 200
+#define X_MIN_POS 0
+#define Y_MIN_POS 0
+#define Z_MIN_POS 0
+#define X_MAX_POS X_BED_SIZE
+#define Y_MAX_POS Y_BED_SIZE
+#define Z_MAX_POS 200
+#define MIN_SOFTWARE_ENDSTOPS
+#if ENABLED(MIN_SOFTWARE_ENDSTOPS)
+  #define MIN_SOFTWARE_ENDSTOP_X
+  #define MIN_SOFTWARE_ENDSTOP_Y
+  #define MIN_SOFTWARE_ENDSTOP_Z
+  #define MIN_SOFTWARE_ENDSTOP_I
+  #define MIN_SOFTWARE_ENDSTOP_J
+  #define MIN_SOFTWARE_ENDSTOP_K
+#endif
+
+
+#define MAX_SOFTWARE_ENDSTOPS
+#if ENABLED(MAX_SOFTWARE_ENDSTOPS)
+  #define MAX_SOFTWARE_ENDSTOP_X
+  #define MAX_SOFTWARE_ENDSTOP_Y
+  #define MAX_SOFTWARE_ENDSTOP_Z
+  #define MAX_SOFTWARE_ENDSTOP_I
+  #define MAX_SOFTWARE_ENDSTOP_J
+  #define MAX_SOFTWARE_ENDSTOP_K
+#endif
+
+#if EITHER(MIN_SOFTWARE_ENDSTOPS, MAX_SOFTWARE_ENDSTOPS)
+#endif
+
+#if ENABLED(FILAMENT_RUNOUT_SENSOR)
+  #define FIL_RUNOUT_ENABLED_DEFAULT true 
+  #define NUM_RUNOUT_SENSORS   1          
+
+  #define FIL_RUNOUT_STATE     LOW        
+  #define FIL_RUNOUT_PULLUP               
+  #define FILAMENT_RUNOUT_SCRIPT "M600"
+  #ifdef FILAMENT_RUNOUT_DISTANCE_MM
+  #endif
+#endif
+
+#if ENABLED(PREHEAT_BEFORE_LEVELING)
+  #define LEVELING_NOZZLE_TEMP 120   
+  #define LEVELING_BED_TEMP     50
+#endif
+
+#if ANY(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL, PROBE_MANUALLY)
+  #define MANUAL_PROBE_START_Z 0.2  
+#endif
+
+#if ANY(MESH_BED_LEVELING, AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_UBL)
+ 
+  #define ENABLE_LEVELING_FADE_HEIGHT
+  #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
+    #define DEFAULT_LEVELING_FADE_HEIGHT 10.0 
+  #endif
+
+  #define SEGMENT_LEVELED_MOVES
+  #define LEVELED_SEGMENT_LENGTH 5.0 
+
+  #if ENABLED(G26_MESH_VALIDATION)
+    #define MESH_TEST_NOZZLE_SIZE    0.4  
+    #define MESH_TEST_LAYER_HEIGHT   0.2  
+    #define MESH_TEST_HOTEND_TEMP  205    
+    #define MESH_TEST_BED_TEMP      60    
+    #define G26_XY_FEEDRATE         20    
+    #define G26_XY_FEEDRATE_TRAVEL 100    
+    #define G26_RETRACT_MULTIPLIER   1.0  
+  #endif
+
+#endif
+
+#if EITHER(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
+
+
+  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+
+  #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
+
+    #if ENABLED(ABL_BILINEAR_SUBDIVISION)
+      #define BILINEAR_SUBDIVISIONS 3
+    #endif
+
+  #endif
+
+#elif ENABLED(AUTO_BED_LEVELING_UBL)
+
+  #define MESH_INSET 1              
+  #define GRID_MAX_POINTS_X 10      
+  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+
+  #define UBL_MESH_EDIT_MOVES_Z     
+  #define UBL_SAVE_ACTIVE_ON_M500   
+
+#elif ENABLED(MESH_BED_LEVELING)
+
+  #define MESH_INSET 10          
+  #define GRID_MAX_POINTS_X 3    
+  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+
+#endif 
+
+#if ENABLED(LCD_BED_LEVELING)
+  #define MESH_EDIT_Z_STEP  0.025 
+  #define LCD_PROBE_Z_RANGE 4     
+#endif
+
+
+
+#if ENABLED(LEVEL_BED_CORNERS)
+  #define LEVEL_CORNERS_INSET_LFRB { 30, 30, 30, 30 } 
+  #define LEVEL_CORNERS_HEIGHT      0.0   
+  #define LEVEL_CORNERS_Z_HOP       4.0   
+  #if ENABLED(LEVEL_CORNERS_USE_PROBE)
+    #define LEVEL_CORNERS_PROBE_TOLERANCE 0.1
+    #define LEVEL_CORNERS_VERIFY_RAISED   
+  #endif
+
+  #define LEVEL_CORNERS_LEVELING_ORDER { LF, RF, RB, LB }
+#endif
+
+#if ENABLED(Z_SAFE_HOMING)
+  #define Z_SAFE_HOMING_X_POINT X_CENTER  
+  #define Z_SAFE_HOMING_Y_POINT Y_CENTER  
+#endif
+
+#define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (4*60) }
+
+#define VALIDATE_HOMING_ENDSTOPS
+
+
+#if ENABLED(SKEW_CORRECTION)
+  #define XY_DIAG_AC 282.8427124746
+  #define XY_DIAG_BD 282.8427124746
+  #define XY_SIDE_AD 200
+
+  #define XY_SKEW_FACTOR 0.0
+
+  #if ENABLED(SKEW_CORRECTION_FOR_Z)
+    #define XZ_DIAG_AC 282.8427124746
+    #define XZ_DIAG_BD 282.8427124746
+    #define YZ_DIAG_AC 282.8427124746
+    #define YZ_DIAG_BD 282.8427124746
+    #define YZ_SIDE_AD 200
+    #define XZ_SKEW_FACTOR 0.0
+    #define YZ_SKEW_FACTOR 0.0
+  #endif
+#endif
+
+#define EEPROM_CHITCHAT       
+#define EEPROM_BOOT_SILENT    
+#if ENABLED(EEPROM_SETTINGS)
+#endif
+
+#define HOST_KEEPALIVE_FEATURE        
+#define DEFAULT_KEEPALIVE_INTERVAL 2  
+#define BUSY_WHILE_HEATING            
+
+#define PREHEAT_1_LABEL       "PLA"
+#define PREHEAT_1_TEMP_HOTEND 180
+#define PREHEAT_1_TEMP_BED     70
+#define PREHEAT_1_TEMP_CHAMBER 35
+#define PREHEAT_1_FAN_SPEED     0 
+
+#define PREHEAT_2_LABEL       "ABS"
+#define PREHEAT_2_TEMP_HOTEND 240
+#define PREHEAT_2_TEMP_BED    110
+#define PREHEAT_2_TEMP_CHAMBER 35
+#define PREHEAT_2_FAN_SPEED     0 
+
+
+#if ENABLED(NOZZLE_PARK_FEATURE)
+  #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MAX_POS - 10), 20 }
+  #define NOZZLE_PARK_MOVE          0   
+  #define NOZZLE_PARK_Z_RAISE_MIN   2   
+  #define NOZZLE_PARK_XY_FEEDRATE 100   
+  #define NOZZLE_PARK_Z_FEEDRATE    5   
+#endif
+
+
+#if ENABLED(NOZZLE_CLEAN_FEATURE)
+ 
+  #define NOZZLE_CLEAN_STROKES  12
+
+  #define NOZZLE_CLEAN_TRIANGLES  3
+
+  #define NOZZLE_CLEAN_START_POINT { {  30, 30, (Z_MIN_POS + 1) } }
+  #define NOZZLE_CLEAN_END_POINT   { { 100, 60, (Z_MIN_POS + 1) } }
+
+  #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
+  #define NOZZLE_CLEAN_CIRCLE_FN 10
+  #define NOZZLE_CLEAN_CIRCLE_MIDDLE NOZZLE_CLEAN_START_POINT
+
+  #define NOZZLE_CLEAN_GOBACK
+
+  #define NOZZLE_CLEAN_MIN_TEMP 170
+
+#endif
+
+#define PRINTJOB_TIMER_AUTOSTART
+
+#if ENABLED(PRINTCOUNTER)
+  #define PRINTCOUNTER_SAVE_INTERVAL 60 
+#endif
+
+#if ENABLED(PASSWORD_FEATURE)
+  #define PASSWORD_LENGTH 4                 
+  #define PASSWORD_ON_STARTUP
+  #define PASSWORD_UNLOCK_GCODE            
+  #define PASSWORD_CHANGE_GCODE             
+#endif
+
+#define LCD_LANGUAGE en
+
+#define DISPLAY_CHARSET_HD44780 JAPANESE
+
+#define LCD_INFO_SCREEN_STYLE 0
+
+#if ENABLED(SAV_3DGLCD)
+  #define U8GLIB_SSD1306
+#endif
+
+#if ENABLED(DGUS_LCD_UI_MKS)
+  #define USE_MKS_GREEN_UI
+#endif
+
+#if ENABLED(MALYAN_LCD)
+  #define LCD_SERIAL_PORT 1  
+#endif
+
+#if EITHER(ANYCUBIC_LCD_I3MEGA, ANYCUBIC_LCD_CHIRON)
+  #define LCD_SERIAL_PORT 3  
+  
+#endif
+
+#if ENABLED(NEXTION_TFT)
+  #define LCD_SERIAL_PORT 1  
+#endif
+
+
+#if ENABLED(EXTENSIBLE_UI)
+#endif
+
+#if ENABLED(TFT_GENERIC)
+  #define TFT_DRIVER AUTO
+#endif
+
+#if ENABLED(TFT_LVGL_UI)
+#endif
+
+#if ENABLED(TOUCH_SCREEN)
+  #define BUTTON_DELAY_EDIT  50 
+  #define BUTTON_DELAY_MENU 250 
+  #define TOUCH_SCREEN_CALIBRATION
+
+  #if BOTH(TOUCH_SCREEN_CALIBRATION, EEPROM_SETTINGS)
+    #define TOUCH_CALIBRATION_AUTO_SAVE 
+  #endif
+
+  #if ENABLED(TFT_COLOR_UI)
+  #endif
+#endif
+
+#define SOFT_PWM_SCALE 0
+
+#if EITHER(RGB_LED, RGBW_LED)
+#endif
+
+#if ENABLED(NEOPIXEL_LED)
+  #define NEOPIXEL_TYPE   NEO_GRBW 
+  #define NEOPIXEL_PIXELS 30       
+  #define NEOPIXEL_IS_SEQUENTIAL   
+  #define NEOPIXEL_BRIGHTNESS 127  
++-
+  #if ENABLED(NEOPIXEL2_SEPARATE)
+    #define NEOPIXEL2_PIXELS      15  
+    #define NEOPIXEL2_BRIGHTNESS 127  
+    #define NEOPIXEL2_STARTUP_TEST    
+  #else
+  #endif
+
+#endif
+
+#if ANY(BLINKM, RGB_LED, RGBW_LED, PCA9632, PCA9533, NEOPIXEL_LED)
+  #define PRINTER_EVENT_LEDS
+#endif
+
+#define SERVO_DELAY { 300 }
